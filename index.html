@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesotho PAYE Tax Calculator 2025/2026</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇱🇸 Lesotho PAYE Tax Calculator</h1>
+            <p>Calculate gross salary and tax from net salary</p>
+            <div class="tax-info">
+                <strong>2025/2026 Tax Year Rates:</strong><br>
+                Residents: 20% on first M74,040.00, 30% on excess, with M11,640.00 annual tax credit<br>
+                Non-residents: 25% flat rate (no tax credit)
+            </div>
+        </div>
+
+        <div class="content">
+            <form id="taxForm">
+                <div class="form-group">
+                    <label for="netSalary">Net Salary (M)</label>
+                    <input type="number" id="netSalary" step="0.01" min="0" placeholder="Enter net salary" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Calculation Period</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="annual" name="period" value="annual" checked>
+                            <label for="annual">Annual Net Salary</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="monthly" name="period" value="monthly">
+                            <label for="monthly">Monthly Net Salary</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Taxpayer Status</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="resident" name="residency" value="resident" checked>
+                            <label for="resident">Resident</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="nonresident" name="residency" value="nonresident">
+                            <label for="nonresident">Non-Resident</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="button">Calculate Tax</button>
+            </form>
+
+            <div id="results" class="results">
+                <h3>📊 Calculation Results</h3>
+                
+                <div class="result-section">
+                    <h4>Annual Figures</h4>
+                    <div class="result-row">
+                        <span class="result-label">Target Annual Net Salary:</span>
+                        <span class="result-value" id="annualNet">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Required Annual Gross Salary:</span>
+                        <span class="result-value highlight" id="annualGross">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Annual Tax Payable:</span>
+                        <span class="result-value" id="annualTax">-</span>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h4>Monthly Breakdown</h4>
+                    <div class="result-row">
+                        <span class="result-label">Monthly Net Salary:</span>
+                        <span class="result-value" id="monthlyNet">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Monthly Gross Salary:</span>
+                        <span class="result-value highlight" id="monthlyGross">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Monthly Tax (PAYE):</span>
+                        <span class="result-value" id="monthlyTax">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Effective Tax Rate:</span>
+                        <span class="result-value" id="effectiveRate">-</span>
+                    </div>
+                </div>
+
+                <div id="taxBreakdown" class="breakdown"></div>
+                <div id="verification" class="verification"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            2025/2026 Tax Year | Lesotho Revenue Authority Guidelines
+        </div>
+    </div>
+
+    <script src="calculator.js"></script>
+</body>
+</html>
