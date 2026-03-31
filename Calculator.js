@@ -1,4 +1,7 @@
 // Tax calculation constants for 2025/2026
+// #region agent log
+fetch('http://127.0.0.1:7351/ingest/211819ec-9055-48cc-a43e-77c875dee4fc',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9e63b1'},body:JSON.stringify({sessionId:'9e63b1',location:'Calculator.js:boot',message:'calculator script loaded',data:{},timestamp:Date.now(),hypothesisId:'H3'})}).catch(()=>{});
+// #endregion
 const TAX_THRESHOLD = 74040.00;
 const TAX_CREDIT = 11640.00;
 const RATE_LOWER = 0.20;
@@ -32,6 +35,9 @@ function calculateGrossFromNet(netSalary, isResident) {
         const calculatedNet = grossSalary - tax;
         
         if (Math.abs(calculatedNet - netSalary) < 0.01) {
+            // #region agent log
+            fetch('http://127.0.0.1:7351/ingest/211819ec-9055-48cc-a43e-77c875dee4fc',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9e63b1'},body:JSON.stringify({sessionId:'9e63b1',location:'Calculator.js:calculateGrossFromNet',message:'net-to-gross converged',data:{isResident,iterations:i+1,netSalary,grossSalary,tax,absNetDiff:Math.abs(calculatedNet-netSalary)},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
+            // #endregion
             return {
                 gross: grossSalary,
                 tax: tax
@@ -46,9 +52,14 @@ function calculateGrossFromNet(netSalary, isResident) {
         }
     }
     
+    const finalTax = calculateTaxFromGross(grossSalary, isResident);
+    const finalNet = grossSalary - finalTax;
+    // #region agent log
+    fetch('http://127.0.0.1:7351/ingest/211819ec-9055-48cc-a43e-77c875dee4fc',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9e63b1'},body:JSON.stringify({sessionId:'9e63b1',location:'Calculator.js:calculateGrossFromNet',message:'net-to-gross max iterations',data:{isResident,iterations:100,netSalary,grossSalary,tax:finalTax,absNetDiff:Math.abs(finalNet-netSalary)},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
+    // #endregion
     return {
         gross: grossSalary,
-        tax: calculateTaxFromGross(grossSalary, isResident)
+        tax: finalTax
     };
 }
 
@@ -142,6 +153,10 @@ document.getElementById('taxForm').addEventListener('submit', function(e) {
     
     // Verification
     const verificationNet = annualGross - annualTax;
+    // #region agent log
+    fetch('http://127.0.0.1:7351/ingest/211819ec-9055-48cc-a43e-77c875dee4fc',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9e63b1'},body:JSON.stringify({sessionId:'9e63b1',location:'Calculator.js:submit',message:'verification vs target net',data:{isResident,period,annualNet,annualGross,annualTax,verificationNet,verificationDelta:Math.abs(verificationNet-annualNet)},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7351/ingest/211819ec-9055-48cc-a43e-77c875dee4fc',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9e63b1'},body:JSON.stringify({sessionId:'9e63b1',location:'Calculator.js:submit',message:'monthly tax annualization',data:{annualTax,monthlyTax,delta12:Math.abs(monthlyTax*12-annualTax)},timestamp:Date.now(),hypothesisId:'H5'})}).catch(()=>{});
+    // #endregion
     document.getElementById('verification').textContent = 
         `✓ Verification: ${formatCurrency(annualGross)} - ${formatCurrency(annualTax)} = ${formatCurrency(verificationNet)}`;
     
